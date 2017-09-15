@@ -177,6 +177,12 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /**
+         * My custom
+         */
+        Barryvdh\Cors\ServiceProvider::class,
+        Mnabialek\LaravelSqlLogger\Providers\ServiceProvider::class,
+
     ],
 
     /*
