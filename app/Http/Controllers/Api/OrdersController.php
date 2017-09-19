@@ -10,6 +10,10 @@ class OrdersController extends Controller
 {
     
     public function index(Request $request) {
+        $limit = (int) $request->query('limit', 100);
+        $sort = $request->query('sort', 'created_at');
+        $direction = $request->query('direction', 'asc');
+        
         $with = [];
 
         if ($request->query('batch')) {
@@ -18,7 +22,10 @@ class OrdersController extends Controller
             $with = $batch;
         }
 
-        return Order::with($with)->get();
+
+        return Order::with($with)
+            ->orderBy($sort, $direction)
+            ->paginate($limit);
     }
 
     public function show(Request $request, $id) {
