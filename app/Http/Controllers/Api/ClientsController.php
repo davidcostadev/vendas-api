@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Model\Order;
+use App\Model\User as Client;
 
-class OrdersController extends Controller
+class ClientsController extends Controller
 {
     
     public function index(Request $request) {
@@ -18,7 +18,7 @@ class OrdersController extends Controller
             $with = $batch;
         }
 
-        return Order::with($with)->get();
+        return Client::with($with)->get();
     }
 
     public function show(Request $request, $id) {
@@ -30,7 +30,7 @@ class OrdersController extends Controller
             $with = $batch;
         }
 
-        return Order::with($with)->where('id', $id)
+        return Client::with($with)->where('id', $id)
             ->first();
     }
 
@@ -42,18 +42,18 @@ class OrdersController extends Controller
     // }
 
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $order = Order::create($request->all());
+    // /**
+    //  * Store a newly created resource in storage.
+    //  *
+    //  * @param  \Illuminate\Http\Request  $request
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function store(Request $request)
+    // {
+    //     $client = Client::create($request->all());
 
-        return response()->json($order, 201);
-    }
+    //     return response()->json($client, 201);
+    // }
 
     // /**
     //  * Update the specified resource in storage.

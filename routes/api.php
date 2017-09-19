@@ -35,3 +35,15 @@ Route::get('order-histories/{order_histories}', 'Api\OrderHistoriesController@sh
 Route::post('order-histories', 'Api\OrderHistoriesController@store');
 Route::put('order-histories/{order_histories}', 'Api\OrderHistoriesController@update');
 Route::delete('order-histories/{order_histories}', 'Api\OrderHistoriesController@delete');
+
+Route::get('products', 'Api\ProductsController@index');
+Route::get('products/{product}', 'Api\ProductsController@show')->where('product', '[0-9]+');
+Route::post('products', 'Api\ProductsController@store');
+Route::put('products/{product}', 'Api\ProductsController@update');
+Route::delete('products/{product}', 'Api\ProductsController@delete');
+
+Route::get('clients', 'Api\ClientsController@index');
+Route::get('clients/{client}', 'Api\ClientsController@show')->where('client', '[0-9]+');
+Route::post('clients', 'Api\ClientsController@store');
+Route::put('clients/{client}', 'Api\ClientsController@update');
+Route::delete('clients/{client}', 'Api\ClientsController@delete');
