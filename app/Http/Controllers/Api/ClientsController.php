@@ -10,6 +10,13 @@ class ClientsController extends Controller
 {
     
     public function index(Request $request) {
+        $client = Client::query();
+
+        $limit = (int) $request->query('limit', 100);
+        $sort = $request->query('sort', 'created_at');
+        $direction = $request->query('direction', 'asc');
+        
+        
         $with = [];
 
         if ($request->query('batch')) {
@@ -18,7 +25,10 @@ class ClientsController extends Controller
             $with = $batch;
         }
 
-        return Client::with($with)->get();
+ 
+        return $client->with($with)
+            ->orderBy($sort, $direction)
+            ->paginate($limit);
     }
 
     public function show(Request $request, $id) {

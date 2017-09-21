@@ -10,6 +10,13 @@ class ProductsController extends Controller
 {
     
     public function index(Request $request) {
+        $product = Product::query();
+
+        $limit = (int) $request->query('limit', 100);
+        $sort = $request->query('sort', 'created_at');
+        $direction = $request->query('direction', 'asc');
+        
+        
         $with = [];
 
         if ($request->query('batch')) {
@@ -18,7 +25,10 @@ class ProductsController extends Controller
             $with = $batch;
         }
 
-        return Product::with($with)->get();
+ 
+        return $product->with($with)
+            ->orderBy($sort, $direction)
+            ->paginate($limit);
     }
 
     public function show(Request $request, $id) {

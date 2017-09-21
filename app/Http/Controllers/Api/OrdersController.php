@@ -32,7 +32,18 @@ class OrdersController extends Controller
             $order->whereHas('order_histories.status', function ($query) use ($status) {
                 $query->where('name', $status);
             });
+        }
 
+        if ($request->query('user_id')) {
+            $user_id = $request->query('user_id');
+
+            $order->where('user_id', $user_id);
+        }
+
+        if ($request->query('product_id')) {
+            $product_id = $request->query('product_id');
+
+            $order->where('product_id', $product_id);
         }
 
         return $order->with($with)
