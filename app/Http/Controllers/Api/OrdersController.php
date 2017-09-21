@@ -10,9 +10,13 @@ class OrdersController extends Controller
 {
     
     public function index(Request $request) {
+
+        $order = Order::query();
+
         $limit = (int) $request->query('limit', 100);
         $sort = $request->query('sort', 'created_at');
         $direction = $request->query('direction', 'asc');
+        
         
         $with = [];
 
@@ -22,8 +26,16 @@ class OrdersController extends Controller
             $with = $batch;
         }
 
+        if ($request->query('status')) {
+            $status = $request->query('status');
 
-        return Order::with($with)
+            $order->whereHas('order_histories.status', function ($query) use ($status) {
+                $query->where('name', $status);
+            });
+
+        }
+
+        return $order->with($with)
             ->orderBy($sort, $direction)
             ->paginate($limit);
     }
