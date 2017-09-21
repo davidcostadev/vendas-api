@@ -10,6 +10,8 @@ class OrderHistoriesController extends Controller
 {
     
     public function index(Request $request) {
+        $orderHistory = OrderHistory::query();
+
         $with = [];
 
         if ($request->query('batch')) {
@@ -18,7 +20,16 @@ class OrderHistoriesController extends Controller
             $with = $batch;
         }
 
-        return OrderHistory::with($with)->get();
+        if ($request->query('filter')) {
+            $filter = $request->query('filter');
+
+            $orderHistory->whereHas('status', function ($query) use ($filter) {
+                $query->where('name', $filter);
+            });
+
+        }
+
+        return $orderHistory->with($with)->get();
     }
 
     public function show(Request $request, $id) {
