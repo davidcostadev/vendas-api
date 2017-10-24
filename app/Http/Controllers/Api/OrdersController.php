@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Model\Order;
+use App\Model\Status;
 
 class OrdersController extends Controller
 {
@@ -29,9 +30,32 @@ class OrdersController extends Controller
         if ($request->query('status')) {
             $status = $request->query('status');
 
-            $order->whereHas('order_histories.status', function ($query) use ($status) {
-                $query->where('name', $status);
+            $statusEntity = Status::where('name', $status)->first();
+            $status_id = $statusEntity->id;
+
+            if($key = array_search('order_histories', $with) !== false) {
+                $order->whereHas('order_histories', function ($query) use ($status_id) {
+                    $query->where('status_id', $status_id);
+                });
+            } if ($key = array_search('order_histories.status', $with) !== false) {
+                $order->whereHas('order_histories', function ($query) use ($status_id) {
+                    $query->with('status')
+                        ->where('status_id', $status_id);
+                });
+            }
+
+            if(isset($key)) {
+                array_splice($with, 1, $key);
+            }
+
+            $order->whereHas('order_histories', function ($query) use ($status_id) {
+                $query->where('status_id', $status_id);
             });
+
+            $with['order_histories'] = function ($query) use ($status_id) {
+                $query->where('status_id', $status_id);
+                $query->with('status');
+            };
         }
 
         if ($request->query('user_id')) {
