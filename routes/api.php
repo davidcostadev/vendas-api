@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\Router;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +18,33 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
+
+
+Route::get('/', function (Router $router, Request $request) {    
+    $urls = [];
+
+    foreach($router->getRoutes()->getRoutes() as $route) {
+        $uriEx =  explode( '/', $route->uri);
+
+        if($uriEx[0] !== 'api') {
+            continue;
+        }
+
+        $urls[$route->uri]['namespace'] = $route->uri;
+
+        if(!isset($urls[$route->uri]['methods'])) {
+            $urls[$route->uri]['methods'] = [];
+        }
+
+        array_push($urls[$route->uri]['methods'], $route->methods[0]);
+
+        $urls[$route->uri]['_link'] = $request->root() .'/'. $route->uri;
+    }
+
+    ksort($urls);
+
+    return $urls;
+});
 
 Route::get('orders', 'Api\OrdersController@index');
 Route::get('orders/{order}', 'Api\OrdersController@show')->where('order', '[0-9]+');
